@@ -1,5 +1,5 @@
 .DS_Store
-hw2/.idea
-hw2/hw2/obj
-hw2/hw2/bin
-hw2/hw2/packages/
+/**/.idea
+/**/hw2/obj
+/**/hw2/bin
+/**/hw2/packages/
