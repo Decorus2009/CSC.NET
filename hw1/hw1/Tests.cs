@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace hw1
@@ -34,7 +35,7 @@ namespace hw1
                 Assert.True(Trie.Contains(word));
             }
         }
-        
+
         [Test]
         public void TestTrieSize()
         {
@@ -59,12 +60,6 @@ namespace hw1
             }
         }
 
-        private void AddWords()
-        {
-            foreach (var word in Words)
-            {
-                Trie.Add(word);
-            }
-        }
+        private void AddWords() => Words.ToList().ForEach(word => Trie.Add(word));
     }
 }
