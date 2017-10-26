@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace hw2
+namespace Hw2
 {
     /*
     Прогонщик тестов
     */
-    public class TestRunner
+    public static class TestRunner
     {
         public static void Run(Dictionary<Assembly, IEnumerable<TestGroup>> testsInAssemblies)
         {
@@ -67,7 +67,11 @@ namespace hw2
         private static void Run(TestGroup testGroup)
         {
             var type = testGroup.Type;
-            testGroup.BeforeClassMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
+            foreach (var memberInfo in testGroup.BeforeClassMethods)
+            {
+                Run(type, memberInfo);
+            }
+//            testGroup.BeforeClassMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
             foreach (var testMethod in testGroup.TestMethods)
             {
                 testGroup.BeforeMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));

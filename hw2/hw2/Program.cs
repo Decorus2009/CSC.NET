@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace hw2
+namespace Hw2
 {
     internal class Program
     {

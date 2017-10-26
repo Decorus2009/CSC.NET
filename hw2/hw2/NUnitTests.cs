@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace hw2
+namespace Hw2
 {
     /*
     Нормальный класс для тестирования своей тестирующей системы
@@ -13,7 +13,8 @@ namespace hw2
     public class NUnitTests
     {
         private Assembly MyNUnitAssembly { get; set; }
-        private IEnumerable<TestGroup> TestGroups { get; set; }
+        private List<TestGroup> TestGroups { get; set; }
+        private List<MethodInfo> TestMethods { get; set; }
 
         [SetUp]
         public void InitAssembly()
@@ -26,20 +27,21 @@ namespace hw2
             */
             const string file = @"/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw2/hw2/bin/Debug/hw2.exe";
             MyNUnitAssembly = Assembly.LoadFrom(file);
-            TestGroups = TestDiscoverer.DiscoverIn(MyNUnitAssembly);
+            TestGroups = TestDiscoverer.DiscoverIn(MyNUnitAssembly).ToList();
+            TestMethods = TestGroups[0].TestMethods.ToList();
         }
 
         [Test]
         public void TestNumberOfTestGroups()
         {
-            Assert.AreEqual(1, TestGroups.ToList().Count());
+            Assert.AreEqual(1, TestGroups.Count());
         }
 
         [Test]
         public void TestNumberOfDiscoveredBeforeAndAfterClassMethods()
         {
-            var numberOfBeforeClassMethods = TestGroups.ToList()[0].BeforeClassMethods.Count();
-            var numberOfAfterClassMethods = TestGroups.ToList()[0].AfterClassMethods.Count();
+            var numberOfBeforeClassMethods = TestGroups[0].BeforeClassMethods.Count();
+            var numberOfAfterClassMethods = TestGroups[0].AfterClassMethods.Count();
             Assert.AreEqual(1, numberOfBeforeClassMethods);
             Assert.AreEqual(1, numberOfAfterClassMethods);
         }
@@ -47,41 +49,46 @@ namespace hw2
         [Test]
         public void TestNumberOfDiscoveredBeforeAndAfterMethods()
         {
-            var numberOfBeforeMethods = TestGroups.ToList()[0].BeforeMethods.Count();
-            var numberOfAfterMethods = TestGroups.ToList()[0].AfterMethods.Count();
-            Assert.AreEqual(2, numberOfBeforeMethods);
+            var numberOfBeforeMethods = TestGroups[0].BeforeMethods.Count();
+            var numberOfAfterMethods = TestGroups[0].AfterMethods.Count();
+            Assert.AreEqual(1, numberOfBeforeMethods);
             Assert.AreEqual(1, numberOfAfterMethods);
         }
 
         [Test]
         public void TestNumberOfDiscoveredTestMethods()
         {
-            var numberOfTestMethods = TestGroups.ToList()[0].TestMethods.Count();
+            var numberOfTestMethods = TestGroups[0].TestMethods.Count();
             Assert.AreEqual(9, numberOfTestMethods);
         }
 
         [Test]
         public void TestDiscoveredTestMethodsNames()
         {
-            var testMethods = TestGroups.ToList()[0].TestMethods.ToList();
-            Assert.AreEqual("MyTestSimpleEmpty", testMethods[0].Name);
-            Assert.AreEqual("MyTestSimpleNonEmpty", testMethods[1].Name);
-            Assert.AreEqual("MyTestExpectedNullReferenceException", testMethods[2].Name);
-            Assert.AreEqual("MyTestExpectedIndexOutOfRangeException", testMethods[3].Name);
-            Assert.AreEqual("MyTestUnexpectedNullReferenceException", testMethods[4].Name);
-            Assert.AreEqual("MyTestUnexpectedIndexOutOfRangeException", testMethods[5].Name);
-            Assert.AreEqual("MyTestIgnored", testMethods[6].Name);
-            Assert.AreEqual("MyTestIgnoredWithExpectedException", testMethods[7].Name);
+            var correctNames = new List<string>()
+            {
+                "MyTestSimpleEmpty",
+                "MyTestSimpleNonEmpty",
+                "MyTestExpectedNullReferenceException",
+                "MyTestExpectedIndexOutOfRangeException",
+                "MyTestUnexpectedNullReferenceException",
+                "MyTestUnexpectedIndexOutOfRangeException",
+                "MyTestIgnored",
+                "MyTestIgnoredWithExpectedException",
+                "MyTestIgnoredWithUnexpectedException"
+            };
+            for (var i = 0; i < correctNames.Count; i++)
+            {
+                Assert.AreEqual(correctNames[i], TestMethods[i].Name);
+            }
         }
 
         [Test]
         public void TestThat_MyTestSimpleEmpty_MethodPasses()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestSimpleEmpty");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestSimpleEmpty");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Passed, testResult.Status);
@@ -92,11 +99,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestSimpleNonEmpty_MethodPasses()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestSimpleNonEmpty");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestSimpleNonEmpty");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Passed, testResult.Status);
@@ -107,11 +112,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestExpectedNullReferenceException_MethodPasses()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestExpectedNullReferenceException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestExpectedNullReferenceException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Passed, testResult.Status);
@@ -122,11 +125,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestExpectedIndexOutOfRangeException_MethodPasses()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestExpectedIndexOutOfRangeException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestExpectedIndexOutOfRangeException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Passed, testResult.Status);
@@ -137,11 +138,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestUnexpectedNullReferenceException_MethodFails()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestUnexpectedNullReferenceException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestUnexpectedNullReferenceException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Failed, testResult.Status);
@@ -152,11 +151,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestUnexpectedIndexOutOfRangeException_MethodFails()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestUnexpectedIndexOutOfRangeException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestUnexpectedIndexOutOfRangeException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Failed, testResult.Status);
@@ -167,11 +164,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestIgnored_MethodIsIgnored()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestIgnored");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestIgnored");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Ignored, testResult.Status);
@@ -182,11 +177,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestIgnoredWithExpectedException_MethodIsIgnoredAndHasNoCaughtException()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestIgnoredWithExpectedException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestIgnoredWithExpectedException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Ignored, testResult.Status);
@@ -197,11 +190,9 @@ namespace hw2
         [Test]
         public void TestThat_MyTestIgnoredWithUnexpectedException_MethodIsIgnoredAndDoesNotThrow()
         {
-            var type = TestGroups.ToList()[0].Type;
-            var testMethods = TestGroups.ToList()[0].TestMethods;
+            var type = TestGroups[0].Type;
 
-            var testToRun = testMethods.ToList()
-                .Find(methodInfo => methodInfo.Name == "MyTestIgnoredWithUnexpectedException");
+            var testToRun = TestMethods.First(methodInfo => methodInfo.Name == "MyTestIgnoredWithUnexpectedException");
             var testResult = TestRunner.RunTest(type, testToRun);
 
             Assert.AreEqual(Status.Ignored, testResult.Status);

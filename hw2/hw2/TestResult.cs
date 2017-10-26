@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace hw2
+namespace Hw2
 {
     /*
     Результат тестирования:

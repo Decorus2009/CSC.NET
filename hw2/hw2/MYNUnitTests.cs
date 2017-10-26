@@ -1,7 +1,7 @@
 ﻿using System;
-using hw2.MyAttributes;
+using Hw2.MyAttributes;
 
-namespace hw2
+namespace Hw2
 {
     /*
     Набор простых тестовых методов 
@@ -14,12 +14,7 @@ namespace hw2
         }
 
         [Before]
-        public void Before1()
-        {
-        }
-
-        [Before]
-        public void Before2()
+        public void Before()
         {
         }
 
@@ -71,13 +66,13 @@ namespace hw2
             Console.WriteLine("It should never be printed");
         }
 
-        [Test(ExpectedException = typeof(Exception), Ignore = "Ignore even this text")]
+        [Test(ExpectedException = typeof(Exception), Ignore = "Ignore even this test")]
         public void MyTestIgnoredWithExpectedException()
         {
             Console.WriteLine("It also shouldn't be printed");
         }
 
-        [Test(Ignore = "Ignore even this text")]
+        [Test(Ignore = "Ignore even this test")]
         public void MyTestIgnoredWithUnexpectedException()
         {
             Console.WriteLine("It also shouldn't be printed");

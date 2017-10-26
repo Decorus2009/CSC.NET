@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using hw2.MyAttributes;
+using Hw2.MyAttributes;
 
-namespace hw2
+namespace Hw2
 {
     /*
     Проход по всем сборкам и нахождение методов с атрибутами из MyNUnit 
@@ -15,7 +15,7 @@ namespace hw2
         public static Dictionary<Assembly, IEnumerable<TestGroup>> DiscoverIn(string path)
         {
             var testsInAssemblies = new Dictionary<Assembly, IEnumerable<TestGroup>>();
-            
+
             foreach (var file in Directory.EnumerateFiles(path, ".", SearchOption.AllDirectories)
                 .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe")))
             {
@@ -43,13 +43,13 @@ namespace hw2
                 */
                 if (testMethods.Any())
                 {
-                    testGroups.Add(new TestGroup(type, beforeClassMethods, beforeMethods, testMethods, afterMethods,
-                        afterClassMethods));
+                    testGroups.Add(new TestGroup(type, beforeClassMethods, beforeMethods,
+                        testMethods, afterMethods, afterClassMethods));
                 }
             }
             return testGroups;
         }
-        
+
         private static IEnumerable<MethodInfo> GetMethodsWithAttribute<TAttribute>(Type type) =>
             type.GetMethods().Where(m => m.GetCustomAttributes(typeof(TAttribute), true).Length > 0);
     }
