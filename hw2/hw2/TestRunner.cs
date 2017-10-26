@@ -71,16 +71,24 @@ namespace Hw2
             {
                 Run(type, memberInfo);
             }
-//            testGroup.BeforeClassMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
             foreach (var testMethod in testGroup.TestMethods)
             {
-                testGroup.BeforeMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
+                foreach (var memberInfo in testGroup.BeforeMethods)
+                {
+                    Run(type, memberInfo);
+                }
                 var testResult = RunTest(type, testMethod);
-                testGroup.AfterMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
+                foreach (var memberInfo in testGroup.AfterMethods)
+                {
+                    Run(type, memberInfo);
+                }
 
                 Console.WriteLine($"Test method \'{testMethod}\'\n{testResult}");
             }
-            testGroup.AfterClassMethods.ToList().ForEach(memberInfo => Run(type, memberInfo));
+            foreach (var memberInfo in testGroup.AfterClassMethods)
+            {
+                Run(type, memberInfo);
+            }
         }
 
         /*
