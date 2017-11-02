@@ -353,15 +353,6 @@ namespace Test
         }
         
         [Test]
-        public void FlattenDeepNoneTest()
-        {
-            var mapper = Option<Option<int>>.Some(Option<int>.None());
-            
-            // теперь не падает с исключением
-            Assert.IsTrue(Option<int>.Flatten(mapper).IsNone);
-        }
-
-        [Test]
         public void NoneGetHashCodeEqualsTest()
         {
             Assert.AreEqual(Option<int>.None().GetHashCode(), Option<string>.None().GetHashCode());
