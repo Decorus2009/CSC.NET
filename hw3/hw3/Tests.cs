@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Option;
 
-namespace hw3
+namespace Hw3
 {
     [TestFixture]
     public class Tests
@@ -58,11 +59,11 @@ namespace hw3
 
         [Test]
         public void Value_ForOptionNoneForAValueType_Throws() =>
-            Assert.That(() => Option<int>.None().Value, Throws.ArgumentNullException);
+            Assert.That(() => Option<int>.None().Value, Throws.InstanceOf<OptionException>());
 
         [Test]
         public void Value_ForOptionNoneForAReferenceType_Throws() =>
-            Assert.That(() => Option<string>.None().Value, Throws.ArgumentNullException);
+            Assert.That(() => Option<string>.None().Value, Throws.InstanceOf<OptionException>());
 
 
         [Test]
@@ -146,7 +147,7 @@ namespace hw3
             var none = Option<int>.None();
             var fatOption = Option<Option<int>>.Some(none);
             var flatten = Option<int>.Flatten(fatOption);
-            Assert.That(() => flatten.Value, Throws.ArgumentNullException);
+            Assert.That(() => flatten.Value, Throws.InstanceOf<OptionException>());
         }
 
         [Test]
@@ -155,7 +156,7 @@ namespace hw3
             var none = Option<string>.None();
             var fatOption = Option<Option<string>>.Some(none);
             var flatten = Option<string>.Flatten(fatOption);
-            Assert.That(() => flatten.Value, Throws.ArgumentNullException);
+            Assert.That(() => flatten.Value, Throws.InstanceOf<OptionException>());
         }
         
         
@@ -326,6 +327,44 @@ namespace hw3
             var option1 = Option<string>.None();
             var set = new HashSet<Option<string>> {option1};
             Assert.True(set.Contains(Option<string>.None()));
+        }
+        
+        
+        // тесты Михаила
+        [Test]
+        public void NoneReferenceEqualsNoneTest()
+        {
+            // теперь не падает
+            Assert.IsTrue(Option<int>.None() == Option<int>.None());
+        }
+        
+        [Test]
+        public void NoneEqualsNoneTest()
+        {
+            // проходит успешно
+            Assert.AreEqual(Option<int>.None(), Option<int>.None());
+        }
+        
+        [Test]
+        public void FlattenNoneTest()
+        {
+            // теперь не падает с исключением
+            Assert.IsTrue(Option<int>.Flatten(Option<Option<int>>.None()).IsNone);
+        }
+        
+        [Test]
+        public void FlattenDeepNoneTest()
+        {
+            var mapper = Option<Option<int>>.Some(Option<int>.None());
+            
+            // теперь не падает с исключением
+            Assert.IsTrue(Option<int>.Flatten(mapper).IsNone);
+        }
+
+        [Test]
+        public void NoneGetHashCodeEqualsTest()
+        {
+            Assert.AreEqual(Option<int>.None().GetHashCode(), Option<string>.None().GetHashCode());
         }
     }
 }

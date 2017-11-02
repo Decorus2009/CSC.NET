@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace hw3
+namespace Option
 {
     public class Option<T>
     {
+        private static readonly Option<T> _none = new Option<T>(); 
         private readonly T _value;
 
         private Option()
@@ -21,7 +22,7 @@ namespace hw3
             _value = value;
             IsSome = true;
         }
-
+       
         public bool IsSome { get; }
 
         public bool IsNone => !IsSome;
@@ -32,7 +33,7 @@ namespace hw3
             {
                 if (IsNone)
                 {
-                    throw new ArgumentNullException();
+                    throw new OptionException("Option.None does not contain value");
                 }
                 return _value;
             }
@@ -41,23 +42,19 @@ namespace hw3
 
         public static Option<T> Some(T value) => new Option<T>(value);
 
-        public static Option<T> None() => new Option<T>();
+        public static Option<T> None() => _none;
 
         public Option<TR> Map<TR>(Func<T, TR> f) => IsNone ? Option<TR>.None() : Option<TR>.Some(f(Value));
 
-        public static Option<T> Flatten(Option<Option<T>> mapper) => mapper.Value;
+        public static Option<T> Flatten(Option<Option<T>> mapper) => mapper.IsNone ? None() : mapper.Value;
 
         public override bool Equals(object obj)
         {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj == null || obj.GetType() != typeof(Option<T>))
+            if (!(obj is Option<T> other))
             {
                 return false;
             }
-            var other = (Option<T>) obj;
+            
             if (IsNone && other.IsNone)
             {
                 return true;
