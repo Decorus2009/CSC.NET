@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("hw4FieldGenerator")]
+[assembly: AssemblyTitle("Mini_Roguelike")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("hw4FieldGenerator")]
+[assembly: AssemblyProduct("Mini_Roguelike")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("F88994F9-077C-4DE4-8BFB-9E163678F286")]
+[assembly: Guid("30EB3798-2F8F-4F7A-8478-30B3FB8E263B")]
 
 // Version information for an assembly consists of the following four values:
 //

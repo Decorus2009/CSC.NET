@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace hw4
+namespace Mini_Roguelike
 {
     public class EventLoop
     {

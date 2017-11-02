@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace hw4FieldGenerator
+namespace FieldGenerator
 {
     public class FieldGenerator
     {

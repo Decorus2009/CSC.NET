@@ -1,4 +1,4 @@
-﻿namespace hw4
+﻿namespace Mini_Roguelike
 {
     public enum Direction
     {

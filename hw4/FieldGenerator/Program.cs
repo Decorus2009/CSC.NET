@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace hw4FieldGenerator
+namespace FieldGenerator
 {
     internal class Program
     {

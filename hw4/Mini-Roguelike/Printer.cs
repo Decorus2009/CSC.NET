@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace hw4
+namespace Mini_Roguelike
 {
     public class Printer
     {
         public static void PrintField(Game game)
         {
+            Clear();
             foreach (var row in game.Field)
             {
                 foreach (var cell in row)
@@ -30,11 +31,6 @@ namespace hw4
             Console.Write('@');
         }
 
-        public void Foo()
-        {
-        }
-
-        
         public static void PrintHero(Game game)
         {
             WriteAt(game.Previous.x, game.Previous.y, game.CharUnderPreviousPosition());

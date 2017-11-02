@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace hw4
+namespace Mini_Roguelike
 {
     public class Game
     {

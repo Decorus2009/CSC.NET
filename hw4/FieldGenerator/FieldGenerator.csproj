@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F88994F9-077C-4DE4-8BFB-9E163678F286}</ProjectGuid>
+    <ProjectGuid>{237D322B-8F7E-411A-B687-44DD1C94CCA9}</ProjectGuid>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>hw4FieldGenerator</RootNamespace>
-    <AssemblyName>hw4FieldGenerator</AssemblyName>
+    <RootNamespace>FieldGenerator</RootNamespace>
+    <AssemblyName>FieldGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
