@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Option;
 
-namespace Hw3
+namespace Test
 {
     [TestFixture]
     public class Tests
@@ -367,4 +367,5 @@ namespace Hw3
             Assert.AreEqual(Option<int>.None().GetHashCode(), Option<string>.None().GetHashCode());
         }
     }
+
 }
