@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace LockBasedBlockingArrayQueue
 {
-    public class Test
+    public class Tests
     {
         [Test]
         public void TestEmptyQueueIsEmpty()
