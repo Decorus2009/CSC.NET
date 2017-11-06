@@ -37,7 +37,7 @@ namespace LockBasedBlockingArrayQueue
             try
             {
                 // if queue is full, wait
-                while (Interlocked.CompareExchange(ref _size, 0, 0) >= _capacity)
+                while (_size >= _capacity)
                 {
                     _notFull.WaitOne();
                 }
@@ -62,7 +62,7 @@ namespace LockBasedBlockingArrayQueue
             try
             {
                 // if queue is empty, wait
-                while (Interlocked.CompareExchange(ref _size, 0, 0) == 0)
+                while (_size == 0)
                 {
                     _notEmpty.WaitOne();
                 }
@@ -84,12 +84,18 @@ namespace LockBasedBlockingArrayQueue
         /// <returns>True if can enqueue, else False</returns>
         public bool TryEnqueue(T element)
         {
-            if (!Monitor.TryEnter(_tailLock)) return false;
-
+            if (!Monitor.TryEnter(_tailLock))
+            {
+                return false;
+            }
+            
             try
             {
                 // can't enqueue and return false if queue is full
-                if (Interlocked.CompareExchange(ref _size, 0, 0) >= _capacity) return false;
+                if (_size >= _capacity)
+                {
+                    return false;
+                }
 
                 PutElementAndSignalIfNotEmpty(element);
                 return true;
@@ -107,12 +113,18 @@ namespace LockBasedBlockingArrayQueue
         /// <returns>True if can dequeue, else False</returns>
         public bool TryDequeue(ref T element)
         {
-            if (!Monitor.TryEnter(_headLock)) return false;
+            if (!Monitor.TryEnter(_headLock))
+            {
+                return false;
+            }
 
             try
             {
-                // can't enqueue and return false if queue is full
-                if (Interlocked.CompareExchange(ref _size, 0, 0) == 0) return false;
+                // can't dequeue and return false if queue is empty
+                if (_size == 0)
+                {
+                    return false;
+                }
 
                 element = TakeElementAndSignalIfNotFull();
                 return true;
@@ -123,10 +135,10 @@ namespace LockBasedBlockingArrayQueue
             }
         }
 
-        public bool IsEmpty() => Interlocked.CompareExchange(ref _size, 0, 0) == 0;
+        public int Size() => _size;
         
-        public int Size() => Interlocked.CompareExchange(ref _size, 0, 0);
-
+        public bool IsEmpty() => Size() == 0;
+        
         public void Clear()
         {
             Monitor.Enter(_headLock);

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Philosophers", "Philosopher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockBasedBlockingArrayQueue", "LockBasedBlockingArrayQueue\LockBasedBlockingArrayQueue.csproj", "{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFreeBlockingArrayQueue", "LockFreeBlockingArrayQueue\LockFreeBlockingArrayQueue.csproj", "{7129A41B-661D-4D0E-AD21-F36D61F61AEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,9 +10,9 @@
 
         bool TryDequeue(ref T element);
 
-        bool IsEmpty();
-
         int Size();
+
+        bool IsEmpty();
         
         void Clear();
     }
