@@ -27,16 +27,14 @@ namespace LockBasedBlockingArrayQueue
             _notFull = new AutoResetEvent(false);
         }
 
-        /// <summary>
-        /// Enqueues element into queue. Blocks until can enqueue
-        /// </summary>
-        /// <param name="element">Element to enqueue</param>
+
+        // блокируется до тех пор, пока не сможет вставить элемент 
         public void Enqueue(T element)
         {
             Monitor.Enter(_tailLock);
             try
             {
-                // if queue is full, wait
+                // если очередь полна, ждать
                 while (_size >= _capacity)
                 {
                     _notFull.WaitOne();
@@ -50,10 +48,7 @@ namespace LockBasedBlockingArrayQueue
             }
         }
 
-        /// <summary>
-        /// Dequeues element from queue. Blocks until can dequeue
-        /// </summary>
-        /// <returns>Dequeued element</returns>
+        // блокируется до тех пор, пока не сможет взять элемент 
         public T Dequeue()
         {
             T head;
@@ -61,7 +56,7 @@ namespace LockBasedBlockingArrayQueue
             Monitor.Enter(_headLock);
             try
             {
-                // if queue is empty, wait
+                // если очередь пуста, ждать
                 while (_size == 0)
                 {
                     _notEmpty.WaitOne();
@@ -77,11 +72,7 @@ namespace LockBasedBlockingArrayQueue
             return head;
         }
 
-        /// <summary>
-        /// Tries to lock tail and put element without waiting
-        /// </summary>
-        /// <param name="element">Element to enqueue</param>
-        /// <returns>True if can enqueue, else False</returns>
+        // пытается вставить элемент без блокировки
         public bool TryEnqueue(T element)
         {
             if (!Monitor.TryEnter(_tailLock))
@@ -91,7 +82,6 @@ namespace LockBasedBlockingArrayQueue
             
             try
             {
-                // can't enqueue and return false if queue is full
                 if (_size >= _capacity)
                 {
                     return false;
@@ -106,11 +96,7 @@ namespace LockBasedBlockingArrayQueue
             }
         }
 
-        /// <summary>
-        /// Tries to lock head and take element without waiting
-        /// </summary>
-        /// <param name="element">Result of dequeue is put in this parameter</param>
-        /// <returns>True if can dequeue, else False</returns>
+        // пытается взять элемент без блокировки
         public bool TryDequeue(ref T element)
         {
             if (!Monitor.TryEnter(_headLock))
@@ -120,7 +106,6 @@ namespace LockBasedBlockingArrayQueue
 
             try
             {
-                // can't dequeue and return false if queue is empty
                 if (_size == 0)
                 {
                     return false;
@@ -167,7 +152,7 @@ namespace LockBasedBlockingArrayQueue
         {
             _storage[_tail] = element;
             _tail = (_tail + 1) % _capacity;
-            // increase size and check if queue is not empty, then signal
+            // увеличить размер и проверить, что очередь не пуста, тогда просигналить
             if (Interlocked.Increment(ref _size) > 0)
             {
                 _notEmpty.Set();
@@ -178,7 +163,7 @@ namespace LockBasedBlockingArrayQueue
         {
             var head = _storage[_head];
             _head = (_head + 1) % _capacity;
-            // decrease size and check if queue is not full, then signal
+            // уменьшить размер и проверить, что очередь не полна, тогда просигналить
             if (Interlocked.Decrement(ref _size) < _capacity)
             {
                 _notFull.Set();
