@@ -142,14 +142,34 @@ namespace LockFreeBlockingArrayQueue
         }
 
         
-        // Наверное, стоит полагать, что Size(), IsEmpty() и Clear() стоит запускать без конкуренции
+        // Решил сделать Size блокирующим. 
+        // Главное, чтобы получилось взять _head и _tail в какой-то момент времени 
+        // и вернуть актуальное на тот момент времени значение.
         public int Size()
         {
-            if (_tail >= _head)
+            int currentHead;
+            int currentTail;
+
+            while (true)
             {
-                return _tail - _head;
+                currentHead = _head;
+                currentTail = _tail;
+
+                if (currentHead != _head)
+                {
+                    continue;
+                }
+                if (currentTail != _tail)
+                {
+                    continue;
+                }
+                
+                if (currentTail >= currentHead)
+                {
+                    return currentTail - currentHead;
+                }
+                return _capacity - (currentHead - currentTail);
             }
-            return _capacity - (_head - _tail); 
         }
 
         public bool IsEmpty()
@@ -157,7 +177,7 @@ namespace LockFreeBlockingArrayQueue
             return _head == _maxReadIndex;
         }
 
-        // тут как-то непросто, _head, _tail и _maxReadIndex в ноль атомарно не установить без лока, 
+        // тут как-то неясно, _head, _tail и _maxReadIndex в ноль атомарно не установить без лока, 
         // запускать 3 cas'а - можно получить неконсистентное состояние, когда отработает только часть cas'ов.
         public void Clear()
         {
