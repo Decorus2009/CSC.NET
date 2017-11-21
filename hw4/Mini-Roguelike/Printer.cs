@@ -26,7 +26,7 @@ namespace Mini_Roguelike
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine("\nPress ESC to exit");
+            Console.WriteLine(Environment.NewLine + "Press ESC to exit");
             Console.SetCursorPosition(game.Current.x, game.Current.y);
             Console.Write('@');
         }

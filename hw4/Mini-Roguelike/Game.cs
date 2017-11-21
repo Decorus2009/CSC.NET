@@ -10,15 +10,7 @@ namespace Mini_Roguelike
 
         public event Action<Game> MoveHandler;
 
-        public (int x, int y) Previous
-        {
-            get => _previous;
-            set
-            {
-                _previous.x = value.x;
-                _previous.y = value.y;
-            }
-        }
+        public (int x, int y) Previous { get; set; }
 
         public (int x, int y) Current
         {
@@ -50,7 +42,7 @@ namespace Mini_Roguelike
                 default:
                     throw new ArgumentException(
                         "Only walls and corridors are supported in current version");
-            }            
+            }
         }
 
         public void OnUp() => TryMove(Direction.Up);
@@ -61,7 +53,7 @@ namespace Mini_Roguelike
 
         public void OnRight() => TryMove(Direction.Right);
 
-        
+
         private void TryMove(Direction direction)
         {
             if (!CanMove(direction))
@@ -72,16 +64,16 @@ namespace Mini_Roguelike
             switch (direction)
             {
                 case Direction.Up:
-                    _current.y--;
+                    --_current.y;
                     break;
                 case Direction.Down:
-                    _current.y++;
+                    ++_current.y;
                     break;
                 case Direction.Left:
-                    _current.x--;
+                    --_current.x;
                     break;
                 case Direction.Right:
-                    _current.x++;
+                    ++_current.x;
                     break;
                 default:
                     throw new ArgumentException("Wrong direction");

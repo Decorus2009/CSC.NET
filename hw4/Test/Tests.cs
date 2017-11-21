@@ -8,13 +8,21 @@ namespace Test
     */
     public class Tests
     {
-        private Game _game;
+        private Game _generatedGame;
+        private Game _emptyGame;
 
+
+        [SetUp]
+        public void SetUp()
+        {
+            _generatedGame = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/generated_field.txt");
+            _emptyGame = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
+        }
+        
         [Test]
         public void GameFieldContainsOnlyWallsAndCorridors()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/generated_field.txt");
-            _game.Field.ForEach(
+            _generatedGame.Field.ForEach(
                 row => { row.ForEach(cell => { Assert.That(cell == Cell.Free || cell == Cell.Wall); }); });
         }
 
@@ -26,98 +34,88 @@ namespace Test
         [Test]
         public void CannotMoveThroughWall()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/generated_field.txt");
-            _game.OnDown();
-            Assert.AreEqual(_game.Current, _game.Previous);
+            _generatedGame.OnDown();
+            Assert.AreEqual(_generatedGame.Current, _generatedGame.Previous);
         }
 
         
         [Test]
         public void CannotMoveUpInEmptyFieldWhenAtFirstRow() 
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            _game.OnUp();
-            Assert.AreEqual(_game.Current, _game.Previous);
+            _emptyGame.OnUp();
+            Assert.AreEqual(_emptyGame.Current, _emptyGame.Previous);
         }
 
         [Test]
         public void CannotMoveDownInEmptyFieldWhenAtLastRow()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            var rows = _game.Field.Count;
+            var rows = _emptyGame.Field.Count;
 
-            _game.Current = (0, rows - 1);
-            _game.Previous = _game.Current;
-            _game.OnDown();
-            Assert.AreEqual(_game.Current, _game.Previous);
+            _emptyGame.Current = (0, rows - 1);
+            _emptyGame.Previous = _emptyGame.Current;
+            _emptyGame.OnDown();
+            Assert.AreEqual(_emptyGame.Current, _emptyGame.Previous);
         }
 
         [Test]
         public void CannotMoveLeftInEmptyFieldWhenAtFirstColumn()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            _game.OnLeft();
-            Assert.AreEqual(_game.Current, _game.Previous);
+            _emptyGame.OnLeft();
+            Assert.AreEqual(_emptyGame.Current, _emptyGame.Previous);
         }
         
         [Test]
         public void CannotMoveRightInEmptyFieldWhenAtLastColumn()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            var columns = _game.Field[0].Count;
+            var columns = _emptyGame.Field[0].Count;
 
-            _game.Current = (columns - 1, 0);
-            _game.Previous = _game.Current;
-            _game.OnRight();
-            Assert.AreEqual(_game.Current, _game.Previous);
+            _emptyGame.Current = (columns - 1, 0);
+            _emptyGame.Previous = _emptyGame.Current;
+            _emptyGame.OnRight();
+            Assert.AreEqual(_emptyGame.Current, _emptyGame.Previous);
         }
 
         
         [Test]
         public void CanMoveUpInEmptyFieldWhenNotAtFirstRow()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            var rows = _game.Field.Count;
+            var rows = _emptyGame.Field.Count;
 
-            _game.Current = (0, rows - 1);
-            _game.Previous = _game.Current;
+            _emptyGame.Current = (0, rows - 1);
+            _emptyGame.Previous = _emptyGame.Current;
 
-            _game.OnUp();
-            Assert.AreEqual(_game.Current.x, _game.Previous.x);
-            Assert.AreEqual(_game.Current.y, _game.Previous.y - 1);
+            _emptyGame.OnUp();
+            Assert.AreEqual(_emptyGame.Current.x, _emptyGame.Previous.x);
+            Assert.AreEqual(_emptyGame.Current.y, _emptyGame.Previous.y - 1);
         }
 
         [Test]
         public void CanMoveDownInEmptyFieldWhenNotAtLastRow()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            _game.OnDown();
-            Assert.AreEqual(_game.Current.x, _game.Previous.x);
-            Assert.AreEqual(_game.Current.y, _game.Previous.y + 1);
+            _emptyGame.OnDown();
+            Assert.AreEqual(_emptyGame.Current.x, _emptyGame.Previous.x);
+            Assert.AreEqual(_emptyGame.Current.y, _emptyGame.Previous.y + 1);
         }
         
         [Test]
         public void CanMoveLeftInEmptyFieldWhenNotAtFirstColumn()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            var columns = _game.Field[0].Count;
+            var columns = _emptyGame.Field[0].Count;
 
-            _game.Current = (columns - 1, 0);
-            _game.Previous = _game.Current;
+            _emptyGame.Current = (columns - 1, 0);
+            _emptyGame.Previous = _emptyGame.Current;
 
-            _game.OnLeft();
-            Assert.AreEqual(_game.Current.x, _game.Previous.x - 1);
-            Assert.AreEqual(_game.Current.y, _game.Previous.y);
+            _emptyGame.OnLeft();
+            Assert.AreEqual(_emptyGame.Current.x, _emptyGame.Previous.x - 1);
+            Assert.AreEqual(_emptyGame.Current.y, _emptyGame.Previous.y);
         }
 
         [Test]
         public void CanMoveRightInEmptyFieldWhenNotAtLastColumn()
         {
-            _game = new Game("/Users/decorus/Dropbox/CSC/Courses/2017-2/C#/repo/CSC.NET/hw4/Mini-Roguelike/field/empty_field.txt");
-            _game.OnRight();
-            Assert.AreEqual(_game.Current.x, _game.Previous.x + 1);
-            Assert.AreEqual(_game.Current.y, _game.Previous.y);
+            _emptyGame.OnRight();
+            Assert.AreEqual(_emptyGame.Current.x, _emptyGame.Previous.x + 1);
+            Assert.AreEqual(_emptyGame.Current.y, _emptyGame.Previous.y);
         }
     }
-
 }

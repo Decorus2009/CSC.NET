@@ -28,6 +28,12 @@ namespace Mini_Roguelike
             Printer.PrintField(game);
             eventLoop.Run();
             Printer.Clear();
+
+            eventLoop.UpHandler -= game.OnUp;
+            eventLoop.DownHandler -= game.OnDown;
+            eventLoop.LeftHandler -= game.OnLeft;
+            eventLoop.RightHandler -= game.OnRight;
+            game.MoveHandler -= Printer.PrintHero;
         }
     }
 }
