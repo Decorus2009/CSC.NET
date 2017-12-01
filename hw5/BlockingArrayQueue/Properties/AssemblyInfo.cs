@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LockBasedBlockingArrayQueue")]
+[assembly: AssemblyTitle("BlockingArrayQueue")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LockBasedBlockingArrayQueue")]
+[assembly: AssemblyProduct("BlockingArrayQueue")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("BE03683A-F75B-4A37-B0C5-0DDEBA2B4140")]
+[assembly: Guid("80B6E720-2622-4159-AAF4-53DA301BE235")]
 
 // Version information for an assembly consists of the following four values:
 //

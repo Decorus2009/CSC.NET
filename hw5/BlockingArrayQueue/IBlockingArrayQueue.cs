@@ -1,6 +1,6 @@
-﻿namespace LockFreeBlockingArrayQueue
+﻿namespace BlockingArrayQueue
 {
-    public interface ILockFreeQueue<T>
+    public interface IBlockingArrayQueue<T>
     {
         void Enqueue(T element);
 

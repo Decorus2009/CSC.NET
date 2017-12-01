@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
-namespace LockFreeBlockingArrayQueue
+namespace BlockingArrayQueue
 {
-    public class LockFreeQueue<T> : ILockFreeQueue<T>
+    public class LockFreeQueue<T> : IBlockingArrayQueue<T>
     {
         private readonly T[] _storage;
         private readonly int _capacity;
@@ -51,31 +52,38 @@ namespace LockFreeBlockingArrayQueue
                 }
             }
 
+            // ячейка с номером currentTail уже зарезервирована, 
+            // к ней никто не сможет обратиться на чтение / запись из-за значений _tail и _maxReadIndex
+            // так что, по идее, можно записывать
             _storage[currentTail] = element;
 
             // _maxReadIndex может быть увеличен только в том потоке, в котором currentTail соответствует ячейке, 
             // следующей за последним надежно записанным элементом, фактическим хвостом (когда currentTail == _maxReadIndex). 
-            // На _tail опираться нельзя, он может кучу раз сдвинут другими потоками вправо,
+            // На _tail опираться нельзя, он может кучу раз быть сдвинут другими потоками вправо,
             // Поэтому тут сможет работать только один поток, остальные будут просто крутиться
+            
+            // TODO если поток, который может продвинуть _maxReadIndex, "умрет", встанут все продюсеры
+            var wait = new SpinWait();
             while (!CAS(ref _maxReadIndex, (currentTail + 1) % _capacity, currentTail))
             {
-                // можно теперь отдохнуть, пусть другие пашут
-                Thread.Yield();
+                // пока потоку делать нечего
+                
+                // "вспомогательный класс SpinWait, который в свою очередь уже будет решать, 
+                // когда на самом деле вызывать Yield"
+                // https://referencesource.microsoft.com/#System/sys/system/collections/concurrent/BlockingCollection.cs,481
+                // https://referencesource.microsoft.com/#mscorlib/system/threading/SpinWait.cs,39bd72970cc926fe
+                wait.SpinOnce();
             }
         }
 
         // крутится в user-space, пока не сможет вернуть что-то (т.к. blocking queue)
         public T Dequeue()
         {
-            // локальные для потока!
-            int currentHead;
-            int currentMaxReadIndex;
-            T currentResult;
-
             while (true)
             {
-                currentHead = _head;
-                currentMaxReadIndex = _maxReadIndex;
+                // локальные для потока!
+                var currentHead = _head;
+                var currentMaxReadIndex = _maxReadIndex;
 
                 // если очередь пуста, повторить
                 if (currentHead == currentMaxReadIndex)
@@ -83,8 +91,8 @@ namespace LockFreeBlockingArrayQueue
                     continue;
                 }
                
-                // обращение к элементу массива атомарно?  
-                currentResult = _storage[currentHead];
+                // обращение к элементу массива атомарно  
+                var currentResult = _storage[currentHead];
 
                 // если голова не изменилась, то предыдущее присвоение (currentResult = _storage[currentHead]) валидно
                 // и можно возвращаться
@@ -95,65 +103,74 @@ namespace LockFreeBlockingArrayQueue
             }
         }
 
+        // похоже на Enqueue
         public bool TryEnqueue(T element)
         {
-            var currentTail = _tail;
-            var currentHead = _head;
-            
-            // если очередь полна, конец
-            if (currentHead == (currentTail + 1) % _capacity)
+            int currentTail;
+            int currentHead;
+
+            while (true)
             {
-                return false;
+                currentTail = _tail;
+                currentHead = _head;
+
+                // если очередь полна, конец
+                if (currentHead == (currentTail + 1) % _capacity)
+                {
+                    return false;
+                }
+
+                if (CAS(ref _tail, (currentTail + 1) % _capacity, currentTail))
+                {
+                    break;
+                }
             }
 
-            // попытка продивинуть хвост
-            if (!CAS(ref _tail, (currentTail + 1) % _capacity, currentTail))
-            {
-                return false;
-            }
-            
-            // ячейка с номером currentTail уже зарезервирована, 
-            // к ней никто не сможет обратиться на чтение / запись из-за значений _tail и _maxReadIndex
-            // так что, по идее, можно записывать
             _storage[currentTail] = element;
-            
-            // успех теперь определяется только результатом cas для _maxReadIndex. Если и его удалось продвинуть, то все ок
-            return CAS(ref _maxReadIndex, (currentTail + 1) % _capacity, currentTail);
+
+            var wait = new SpinWait();
+            while (!CAS(ref _maxReadIndex, (currentTail + 1) % _capacity, currentTail))
+            {
+                wait.SpinOnce();
+            }
+
+            return true;
         }
 
+        // похоже на Dequeue
         public bool TryDequeue(ref T element)
         {
-            int currentHead;
-            int currentMaxReadIndex;
-
-            currentHead = _head;
-            currentMaxReadIndex = _maxReadIndex;
-
-            // если очередь пуста, конец
-            if (currentHead == currentMaxReadIndex)
+            while (true)
             {
-                return false;
-            }
-               
-            element = _storage[currentHead];
+                var currentHead = _head;
+                var currentMaxReadIndex = _maxReadIndex;
 
-            // если голова не изменилась, то предыдущее присвоение (currentResult = _storage[currentHead]) валидно, все ок
-            return CAS(ref _head, (currentHead + 1) % _capacity, currentHead); 
+                // если очередь пуста, конец
+                if (currentHead == currentMaxReadIndex)
+                {
+                    return false;
+                }
+               
+                element = _storage[currentHead];
+
+                if (CAS(ref _head, (currentHead + 1) % _capacity, currentHead))
+                {
+                    break;
+                }
+            }
+
+            return true;
         }
 
         
-        // Решил сделать Size блокирующим. 
         // Главное, чтобы получилось взять _head и _tail в какой-то момент времени 
         // и вернуть актуальное на тот момент времени значение.
         public int Size()
         {
-            int currentHead;
-            int currentTail;
-
             while (true)
             {
-                currentHead = _head;
-                currentTail = _tail;
+                var currentHead = _head;
+                var currentTail = _tail;
 
                 if (currentHead != _head)
                 {
@@ -172,10 +189,7 @@ namespace LockFreeBlockingArrayQueue
             }
         }
 
-        public bool IsEmpty()
-        {
-            return _head == _maxReadIndex;
-        }
+        public bool IsEmpty() => _head == _maxReadIndex;
 
         // тут как-то неясно, _head, _tail и _maxReadIndex в ноль атомарно не установить без лока, 
         // запускать 3 cas'а - можно получить неконсистентное состояние, когда отработает только часть cas'ов.
@@ -184,6 +198,7 @@ namespace LockFreeBlockingArrayQueue
             _head = 0;
             _tail = 0;
             _maxReadIndex = 0;
+            Array.Clear(_storage, 0, _storage.Length);
         }
 
 

@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
-namespace LockBasedBlockingArrayQueue
+namespace BlockingArrayQueue
 {
-    public class LockBasedQueue<T> : ILockBasedQueue<T>
+    public class LockBasedQueue<T> : IBlockingArrayQueue<T>
     {
         private readonly T[] _storage;
         private readonly int _capacity;
@@ -14,7 +15,6 @@ namespace LockBasedBlockingArrayQueue
         private readonly object _tailLock;
         private readonly AutoResetEvent _notEmpty;
         private readonly AutoResetEvent _notFull;
-
 
         public LockBasedQueue(int capacity)
         {
@@ -72,13 +72,9 @@ namespace LockBasedBlockingArrayQueue
             return head;
         }
 
-        // пытается вставить элемент без блокировки
         public bool TryEnqueue(T element)
         {
-            if (!Monitor.TryEnter(_tailLock))
-            {
-                return false;
-            }
+            Monitor.Enter(_tailLock);
             
             try
             {
@@ -96,14 +92,10 @@ namespace LockBasedBlockingArrayQueue
             }
         }
 
-        // пытается взять элемент без блокировки
         public bool TryDequeue(ref T element)
         {
-            if (!Monitor.TryEnter(_headLock))
-            {
-                return false;
-            }
-
+            Monitor.Enter(_headLock);
+            
             try
             {
                 if (_size == 0)
@@ -121,9 +113,9 @@ namespace LockBasedBlockingArrayQueue
         }
 
         public int Size() => _size;
-        
-        public bool IsEmpty() => Size() == 0;
-        
+
+        public bool IsEmpty() => _size == 0;
+
         public void Clear()
         {
             Monitor.Enter(_headLock);
@@ -135,6 +127,7 @@ namespace LockBasedBlockingArrayQueue
                     _head = 0;
                     _tail = 0;
                     _size = 0;
+                    Array.Clear(_storage, 0, _storage.Length);
                 }
                 finally
                 {

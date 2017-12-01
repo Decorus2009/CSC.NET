@@ -5,9 +5,7 @@ VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Philosophers", "Philosophers/Philosophers.csproj", "{1CD8A8D1-7ED8-48ED-9550-05529A7291DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockBasedBlockingArrayQueue", "LockBasedBlockingArrayQueue\LockBasedBlockingArrayQueue.csproj", "{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFreeBlockingArrayQueue", "LockFreeBlockingArrayQueue\LockFreeBlockingArrayQueue.csproj", "{7129A41B-661D-4D0E-AD21-F36D61F61AEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockingArrayQueue", "BlockingArrayQueue\BlockingArrayQueue.csproj", "{80B6E720-2622-4159-AAF4-53DA301BE235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +17,10 @@ Global
 		{1CD8A8D1-7ED8-48ED-9550-05529A7291DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CD8A8D1-7ED8-48ED-9550-05529A7291DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CD8A8D1-7ED8-48ED-9550-05529A7291DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE03683A-F75B-4A37-B0C5-0DDEBA2B4140}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7129A41B-661D-4D0E-AD21-F36D61F61AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80B6E720-2622-4159-AAF4-53DA301BE235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B6E720-2622-4159-AAF4-53DA301BE235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B6E720-2622-4159-AAF4-53DA301BE235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B6E720-2622-4159-AAF4-53DA301BE235}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
