@@ -14,7 +14,7 @@ namespace Philosophers
             if (args.Length != 4)
             {
                 Console.Error.WriteLine(
-                    "Usage:\napplication philosophers_number duration (sec) max_think_time (ms) max_eat_time (ms)");
+                    "Usage: application philosophers_number duration (sec) max_think_time (ms) max_eat_time (ms)");
                 Environment.Exit(1);
             }
             try
