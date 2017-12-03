@@ -3,7 +3,6 @@ open System;
 let random = (new System.Random(int System.DateTime.Now.Ticks)).Next
 
 // 1.
-// nth Fibonacci number using Fibonacci sequence
 printfn "1. Fibonacci numbers %s" Environment.NewLine
 
 let n = 10
@@ -11,7 +10,6 @@ let n = 10
 let fibSequence = Seq.unfold (fun (prev, cur) -> Some(prev, (cur, prev + cur))) (0, 1)
 printfn "%d'th Fib number using sequence is: %d" n (Seq.item n fibSequence) // 55
 
-// nth Fibonacci number using rec
 let nthFibNumber n =
     let mutable counter = 0
 
